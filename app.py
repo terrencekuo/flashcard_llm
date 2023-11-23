@@ -54,8 +54,7 @@ def handler(event, context):
     if not validate_input(prompt):
         return "{\"error\": \"invalid input\"}"
 
-    llm_input = "You are an english teacher. I will give you words to your word bank which you will use to create phrases and sentences to help me learn the language. Your word bank contains: `{}`. Please output a JSON with the `output` as your key containing 4 sentences and phrases which only use the words in your word bank.".format(prompt)
-
+    llm_input = "You are an english teacher. I will give you words to add to your word bank which you will use to create phrases and sentences to help me learn the language. Your word bank only contains: `{}`. Create 2 sentences and phrases only using the words in your word bank. You must output a JSON with key as `output` and the value as an array containing the generated sentences and phrases".format(prompt)
 
     max_tokens = int(event['max_tokens'])    
 
@@ -65,9 +64,16 @@ def handler(event, context):
         grammar=grammar, max_tokens=-1
     )
 
+    logger.info("response=\"{}\"".format(response))
     text_result = response["choices"][0]["text"]
     data = json.loads(text_result)
     data_dump = json.dumps(data, indent=4)
     logger.info("output=\"{}\"".format(data_dump))
 
-    return  data_dump
+    return {
+        'statusCode': 200,
+        'body': data_dump,
+        'headers': {
+            'Content-Type': 'application/json'
+        }
+    }

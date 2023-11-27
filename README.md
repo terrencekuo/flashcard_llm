@@ -15,10 +15,16 @@ docker run --rm -e AWS_LAMBDA_FUNCTION_TIMEOUT=900 -e AWS_LAMBDA_FUNCTION_MEMORY
 docker system prune -f -a
 ```
 
+# format python code
+```
+autopep8 --in-place --aggressive --aggressive app.py
+```
+
 # how to test function
 ```
 curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d {}
 curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"max_tokens": "1024", "prompt": "[\"hello\", \"good morning\", \"I\", \"like\", \"eat\", \"drink\", \"rice\", \"water\"]"}'
+curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"max_tokens": "1024", "word_bank": "[\"swim\", \"run\", \"cook\", \"eat\", \"drink\", \"sleep\", \"learn\", \"teach\", \"read\", \"write\"]"}'
 curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"max_tokens": "1024", "prompt": "<s>[INST] <<SYS>> You are a helpful assistant. <</SYS>> What is a Large Language Model? [/INST]"}'
 ```
 
